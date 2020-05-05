@@ -33,6 +33,7 @@ def diffBetweenTwoStrings(source, target):
     import pdb; pdb.set_trace()
     while not (i == 0 and j == 0):
         min_val = min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]})
+        print('source[' + str(i) + ']=' + source[i-1] + ' target[' + str(j) + ']=' + target[j-1])
 
         # Keep source letter (diagonal)
         if (i > 0) and (j > 0) and (dp[i-1][j-1] == min_val) and (dp[i][j] == dp[i-1][j-1]):
@@ -52,7 +53,8 @@ def diffBetweenTwoStrings(source, target):
 
         # Subtract source and add target (diagonal)
         else:
-            path = ['-' + source[i - 1]] + ['+' + target[j - 1]] + path
+            path = ['-' + source[i - 1]] + path
+            path = ['+' + source[i - 1]] + path
             i -= 1
             j -= 1
 
@@ -81,6 +83,27 @@ def diffBetweenTwoStrings(source, target):
   
     -t +s +q u +i r t l e  # left first
     +s -t +q u +i r t l e   # diag first
+    
+    
+    
+    ex. 2
+      " A B D F F G H
+    " 0 1 2 3 4 5 6 7
+    A 1 0 1 2 3 4 5 6
+    B 2 1 0 1 2 3 4 5
+    C 3 2 1 1 2 3 4 5
+    D 4 3 2 1 2 3 4 5
+    E 5 4 3 2 2 3 4 5
+    F 6 5 4 3 2 2 3 4
+    G 7 6 5 4 3 3 2 3
+    
+    ex. 3
+      " D F F
+    " 0 1 2 3
+    D 1 0 1 2
+    E 2 1 1 2
+    F 3 2 1 1
+    
     """
 
 if __name__ == '__main__':
