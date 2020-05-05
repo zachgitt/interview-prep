@@ -1,6 +1,7 @@
 import numpy as np
 
-def diffBetweenTwoStrings(source, target):
+
+def diffBetweenTwoStrings(source, target, doPrint):
     """
     @param source: str
     @param target: str
@@ -10,7 +11,7 @@ def diffBetweenTwoStrings(source, target):
     num_rows = len(source) + 1
     num_cols = len(target) + 1
     #dp = [num_cols * [0] for _ in range(num_rows)]
-    dp = np.zeros(shape=(num_rows, num_cols))
+    dp = np.zeros(shape=(num_rows, num_cols), dtype=int)
     for i in range(num_rows):
         dp[i][0] = i
     for j in range(num_cols):
@@ -26,14 +27,19 @@ def diffBetweenTwoStrings(source, target):
             else:
                 dp[i][j] = 1 + min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]})
 
+    # Printer section
+    top = np.array(['"'] + [letter for letter in target])
+    left = np.array(['"', '"'] + [letter for letter in source]).reshape((num_rows+1, 1))
+    tmp = np.vstack((top, dp))
+    printer = np.hstack((left, tmp))
+
     # Determine path
     path = []
     i = num_rows - 1
     j = num_cols - 1
-    import pdb; pdb.set_trace()
+    printer[i+1][j+1] += '*'
     while not (i == 0 and j == 0):
         min_val = min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]})
-        print('source[' + str(i) + ']=' + source[i-1] + ' target[' + str(j) + ']=' + target[j-1])
 
         # Keep source letter (diagonal)
         if (i > 0) and (j > 0) and (dp[i-1][j-1] == min_val) and (dp[i][j] == dp[i-1][j-1]):
@@ -53,11 +59,16 @@ def diffBetweenTwoStrings(source, target):
 
         # Subtract source and add target (diagonal)
         else:
+            path = ['+' + target[j - 1]] + path
             path = ['-' + source[i - 1]] + path
-            path = ['+' + source[i - 1]] + path
             i -= 1
             j -= 1
 
+        printer[i+1][j+1] += '*' # TODO: remove printer
+
+    if doPrint:
+        print('Map\n', printer) # TODO: remove printer
+        print('Answer: \n', path)
     return path
 
     """
@@ -107,5 +118,4 @@ def diffBetweenTwoStrings(source, target):
     """
 
 if __name__ == '__main__':
-    path = diffBetweenTwoStrings('ABCDEFG', 'ABDFFGH')
-    print(path)
+    path = diffBetweenTwoStrings('ABCDEFG', 'ABDFFGH', doPrint=True)
