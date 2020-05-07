@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 def diffBetweenTwoStrings(source, target, doPrint):
@@ -35,26 +36,27 @@ def diffBetweenTwoStrings(source, target, doPrint):
 
     # Determine path
     path = []
-    i = num_rows - 1
-    j = num_cols - 1
+    i = num_rows-1
+    j = num_cols-1
     printer[i+1][j+1] += '*'
     while not (i == 0 and j == 0):
-        min_val = min({dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]})
 
-        # Keep source letter (diagonal)
-        if (i > 0) and (j > 0) and (dp[i-1][j-1] == min_val) and (dp[i][j] == dp[i-1][j-1]):
-            path = [source[i - 1]] + path
-            i -= 1
-            j -= 1
+        min_val = min(dp[i-1][j-1], dp[i-1][j], dp[i][j-1])
 
         # Add target letter (left)
-        elif (j > 0) and (dp[i][j - 1] == min_val):
+        if (j > 0) and (dp[i][j-1] == min_val):
             path = ['+' + target[j - 1]] + path
             j -= 1
 
+        # Keep source letter (diagonal)
+        elif (i > 0) and (j > 0) and (dp[i-1][j-1] == min_val) and (dp[i][j] == dp[i-1][j-1]):
+            path = [source[i-1]] + path
+            i -= 1
+            j -= 1
+
         # Subtract source letter (up)
-        elif (i > 0) and (dp[i - 1][j] == min_val):
-            path = ['-' + source[i - 1]] + path
+        elif (i > 0) and (dp[i-1][j] == min_val):
+            path = ['-' + source[i-1]] + path
             i -= 1
 
         # Subtract source and add target (diagonal)
@@ -118,4 +120,4 @@ def diffBetweenTwoStrings(source, target, doPrint):
     """
 
 if __name__ == '__main__':
-    path = diffBetweenTwoStrings('ABCDEFG', 'ABDFFGH', doPrint=True)
+    path = diffBetweenTwoStrings('CBBC', 'CABAABBC', doPrint=True)
